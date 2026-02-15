@@ -1,6 +1,6 @@
 const zh = {
   common: {
-    appName: "ProdMind",
+    appName: "思炼",
     tagline: "认知对抗机器",
     settings: "设置",
     sessions: "会话",

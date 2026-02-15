@@ -3,7 +3,7 @@ import "./globals.css";
 import { ClientProviders } from "./providers";
 
 export const metadata: Metadata = {
-  title: "ProdMind — 认知对抗机器",
+  title: "思炼 — 认知对抗机器",
   description: "AI-driven structured debate for product idea validation",
 };
 
