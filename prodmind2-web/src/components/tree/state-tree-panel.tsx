@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { CausalLoopDiagram } from './causal-loop-diagram';
+import { ConfidenceChart } from '@/components/dashboard/confidence-chart';
 
 interface Problem { version: number; description: string; expected_outcome: string }
 interface Assumption { id: string; content: string; status: string; source: string }
@@ -119,6 +120,9 @@ export function StateTreePanel({ sessionId }: { sessionId: string }) {
           </div>
         ))}
       </div>
+
+      {/* Confidence Trend */}
+      <ConfidenceChart sessionId={sessionId} />
 
       {/* Causal Loop */}
       <CausalLoopDiagram sessionId={sessionId} />
