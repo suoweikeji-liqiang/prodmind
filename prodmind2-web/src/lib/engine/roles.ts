@@ -73,7 +73,7 @@ export async function* streamAgent(
       { role: 'user', content: context },
     ],
     temperature: temp,
-    max_tokens: 2000,
+    max_completion_tokens: 2000,
     stream: true,
   });
 

@@ -28,7 +28,7 @@ export function DialoguePanel() {
       {activeAgent && (
         <AgentMessage
           agent={activeAgent}
-          content={streaming.get(activeAgent) ?? ''}
+          content={streaming[activeAgent] ?? ''}
           isStreaming
         />
       )}

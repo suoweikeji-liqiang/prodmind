@@ -5,7 +5,8 @@ export function useDebate() {
   const store = useSessionStore();
 
   const startRound = useCallback(async (sessionId: string) => {
-    store.setRunning(true);
+    const s = useSessionStore.getState();
+    s.setRunning(true);
 
     const res = await fetch('/api/debate', {
       method: 'POST',
@@ -14,7 +15,7 @@ export function useDebate() {
     });
 
     if (!res.ok || !res.body) {
-      store.setRunning(false);
+      useSessionStore.getState().setRunning(false);
       return;
     }
 
@@ -35,32 +36,33 @@ export function useDebate() {
         if (!data) continue;
         try {
           const event = JSON.parse(data);
+          const actions = useSessionStore.getState();
           switch (event.type) {
             case 'agents_scheduled':
-              store.onAgentsScheduled(event.agents, event.round);
+              actions.onAgentsScheduled(event.agents, event.round);
               break;
             case 'role_start':
-              store.onRoleStart(event.agent);
+              actions.onRoleStart(event.agent);
               break;
             case 'token':
-              store.onToken(event.agent, event.content);
+              actions.onToken(event.agent, event.content);
               break;
             case 'role_complete':
-              store.onRoleComplete(event.agent);
+              actions.onRoleComplete(event.agent);
               break;
             case 'state_update':
-              store.onStateUpdate(event.confidenceIndex);
+              actions.onStateUpdate(event.confidenceIndex);
               break;
             case 'done':
-              store.onDone();
+              actions.onDone();
               break;
           }
         } catch { /* skip malformed */ }
       }
     }
 
-    store.setRunning(false);
-  }, [store]);
+    useSessionStore.getState().setRunning(false);
+  }, []);
 
   return { startRound, ...store };
 }

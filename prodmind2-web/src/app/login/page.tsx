@@ -17,11 +17,11 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const { error } = isSignUp
+    const { error: authError } = isSignUp
       ? await sb().auth.signUp({ email, password })
       : await sb().auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) { setError(error.message); return; }
+    if (authError) { setError(authError.message); return; }
     if (isSignUp) { setError('注册成功，请检查邮箱确认链接。'); return; }
     window.location.href = '/sessions';
   }

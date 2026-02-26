@@ -20,7 +20,7 @@ function radialLayout(items: { id: string; label: string; type: 'assumption' | '
   });
   // Risks on outer ring
   risks.forEach((r, i) => {
-    const angle = (2 * Math.PI * i) / Math.max(risks.length, 1) - Math.PI / 2 + Math.PI / risks.length;
+    const angle = (2 * Math.PI * i) / Math.max(risks.length, 1) - Math.PI / 2 + (risks.length > 0 ? Math.PI / risks.length : 0);
     nodes.push({ ...r, x: CX + Math.cos(angle) * 150, y: CY + Math.sin(angle) * 110 });
   });
   return nodes;

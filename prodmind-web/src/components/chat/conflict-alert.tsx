@@ -157,5 +157,36 @@ export function ConflictAlert({ type, detail, onResolve }: ConflictAlertProps) {
     );
   }
 
+  if (type === "falsification_block") {
+    return (
+      <div className="rounded-lg border border-red-300 bg-red-50 p-4 space-y-3">
+        <div className="flex items-center gap-2 text-red-700 font-medium">
+          <AlertTriangle className="h-4 w-4" />
+          证伪检查缺失
+        </div>
+        <p className="text-sm text-red-800">
+          落地者的输出缺少证伪检查部分，系统正在重新生成包含假设验证的完整输出。
+        </p>
+      </div>
+    );
+  }
+
+  if (type === "forced_opposition") {
+    return (
+      <div className="rounded-lg border border-orange-300 bg-orange-50 p-4 space-y-3">
+        <div className="flex items-center gap-2 text-orange-700 font-medium">
+          <AlertTriangle className="h-4 w-4" />
+          强制反对触发
+        </div>
+        <p className="text-sm text-orange-800">
+          刺客的质疑力度不足，系统已要求其提出更具实质性的反对意见。
+        </p>
+        <Button size="sm" onClick={() => onResolve("force_opposition", "")}>
+          {t.common.confirm}
+        </Button>
+      </div>
+    );
+  }
+
   return null;
 }

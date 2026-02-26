@@ -22,7 +22,7 @@ import {
   validateFalsificationBlock,
 } from "./consensus-check";
 import { extractHypotheses, checkConvergence } from "./convergence";
-import type { DebateAction, SSEEvent, RoleCallOptions } from "@/types";
+import type { DebateAction, SSEEvent, RoleCallOptions, RoleName } from "@/types";
 
 const MAX_ROUNDS = 5;
 
@@ -86,9 +86,9 @@ async function getPreviousRounds(sessionId: string, currentRound: number) {
 async function streamRole(
   gen: AsyncGenerator<string, string, undefined>,
   write: SSEWriter,
-  role: string
+  role: RoleName
 ): Promise<string> {
-  write({ type: "role_start", role: role as never });
+  write({ type: "role_start", role });
   let full = "";
   while (true) {
     const { value, done } = await gen.next();
@@ -97,9 +97,9 @@ async function streamRole(
       break;
     }
     full += value;
-    write({ type: "token", role: role as never, content: value });
+    write({ type: "token", role, content: value });
   }
-  write({ type: "role_complete", role: role as never, content: full });
+  write({ type: "role_complete", role, content: full });
   return full;
 }
 
@@ -245,14 +245,13 @@ export async function processDebateAction(action: DebateAction, write: SSEWriter
         const assassinOutput = await getMessageContent(session.id, round, "assassin");
         const userGhostOutput = await getMessageContent(session.id, round, "user_ghost");
         const roundHistory = await buildRoundHistory(session.id);
-        const userConfirmContent = await getMessageContent(session.id, round, "user");
 
         const grounderOpts: RoleCallOptions = {
-          userInput: userResponse,
+          userInput: idea,
           architectOutput,
           assassinOutput,
           userGhostOutput,
-          userResponse: userConfirmContent,
+          userResponse,
           roundHistory,
         };
 

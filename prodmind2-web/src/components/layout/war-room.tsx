@@ -35,8 +35,8 @@ export function WarRoom({ sessionId }: { sessionId: string }) {
 
   async function handleReject(agent: AgentName, reason: string) {
     await sb().from('agent_comments').insert({
-      session_id: sessionId, round, agent: 'user',
-      content: `驳回 ${agent} 的结论：${reason}`,
+      session_id: sessionId, round, agent: agent,
+      content: `[用户驳回] ${reason}`,
     });
     startRound(sessionId);
   }
@@ -83,7 +83,13 @@ export function WarRoom({ sessionId }: { sessionId: string }) {
         <div className="flex flex-1 flex-col min-w-0">
           <DialoguePanel />
           <HumanInputBar
-            onRespond={() => startRound(sessionId)}
+            onRespond={async (text: string) => {
+              await sb().from('agent_comments').insert({
+                session_id: sessionId, round, agent: 'problem-architect',
+                content: `[用户回应] ${text}`,
+              });
+              startRound(sessionId);
+            }}
             onModify={handleModify}
             onReject={handleReject}
             onForce={() => startRound(sessionId)}

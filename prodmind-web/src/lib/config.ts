@@ -23,8 +23,7 @@ export async function setAppConfig(updates: Partial<AppConfig>): Promise<void> {
     if (value !== undefined) {
       await db.insert(config)
         .values({ key, value })
-        .onConflictDoUpdate({ target: config.key, set: { value } })
-        .run();
+        .onConflictDoUpdate({ target: config.key, set: { value } });
     }
   }
 }

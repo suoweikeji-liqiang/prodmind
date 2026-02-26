@@ -13,7 +13,7 @@ interface SessionStore {
   confidenceIndex: number;
   agentComments: AgentComment[];
   activeAgent: AgentName | null;
-  streaming: Map<AgentName, string>;
+  streaming: Record<string, string>;
   scheduledAgents: AgentName[];
   isRunning: boolean;
 
@@ -33,7 +33,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   confidenceIndex: 0,
   agentComments: [],
   activeAgent: null,
-  streaming: new Map(),
+  streaming: {},
   scheduledAgents: [],
   isRunning: false,
 
@@ -43,28 +43,22 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   onAgentsScheduled: (agents, round) => set({
     scheduledAgents: agents,
     round,
-    streaming: new Map(),
+    streaming: {},
   }),
 
-  onRoleStart: (agent) => set((s) => {
-    const m = new Map(s.streaming);
-    m.set(agent, '');
-    return { activeAgent: agent, streaming: m };
-  }),
+  onRoleStart: (agent) => set((s) => ({
+    activeAgent: agent,
+    streaming: { ...s.streaming, [agent]: '' },
+  })),
 
-  onToken: (agent, token) => set((s) => {
-    const m = new Map(s.streaming);
-    m.set(agent, (m.get(agent) ?? '') + token);
-    return { streaming: m };
-  }),
+  onToken: (agent, token) => set((s) => ({
+    streaming: { ...s.streaming, [agent]: (s.streaming[agent] ?? '') + token },
+  })),
 
-  onRoleComplete: (agent) => set((s) => {
-    const full = s.streaming.get(agent) ?? '';
-    return {
-      activeAgent: null,
-      agentComments: [...s.agentComments, { round: s.round, agent, content: full }],
-    };
-  }),
+  onRoleComplete: (agent) => set((s) => ({
+    activeAgent: null,
+    agentComments: [...s.agentComments, { round: s.round, agent, content: s.streaming[agent] ?? '' }],
+  })),
 
   onStateUpdate: (ci) => set({ confidenceIndex: ci }),
 

@@ -110,6 +110,10 @@ export function detectTechEscape(userResponse: string): boolean {
 // ── Rule 5: Falsification Block Validation ──
 
 export function validateFalsificationBlock(grounderOutput: string): boolean {
-  const required = [/当前最重要假设/, /如果我是错的/, /最小动作/];
+  const required = [
+    /当前最重要假设|current.*hypothesis/i,
+    /如果我是错的|if I.?m wrong/i,
+    /最小动作|minimum action/i,
+  ];
   return required.every((p) => p.test(grounderOutput));
 }

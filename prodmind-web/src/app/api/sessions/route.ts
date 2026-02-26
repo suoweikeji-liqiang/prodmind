@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { sessions } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export async function GET() {
@@ -31,7 +31,6 @@ export async function POST(request: Request) {
     updatedAt: now,
   });
 
-  const allSessions = await db.select().from(sessions);
-  const session = allSessions.find((s) => s.id === id);
+  const [session] = await db.select().from(sessions).where(eq(sessions.id, id));
   return NextResponse.json(session, { status: 201 });
 }

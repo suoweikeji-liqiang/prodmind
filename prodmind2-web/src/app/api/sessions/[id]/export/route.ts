@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { exportSessionToMarkdown } from '@/lib/engine/export';
 
+export const runtime = 'nodejs';
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },

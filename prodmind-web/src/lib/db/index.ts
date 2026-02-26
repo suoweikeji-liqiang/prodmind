@@ -13,7 +13,7 @@ const client = createClient({ url: `file:${dbPath}` });
 export const db = drizzle(client, { schema });
 
 // Auto-create tables on first import (ignore if locked during build)
-client.executeMultiple(`
+await client.executeMultiple(`
   PRAGMA journal_mode = WAL;
   PRAGMA foreign_keys = ON;
 

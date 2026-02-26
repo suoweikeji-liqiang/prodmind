@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { runDebateRound } from '@/lib/engine/debate';
 
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
